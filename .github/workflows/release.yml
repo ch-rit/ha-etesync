@@ -1,33 +1,71 @@
 name: Release
 
+# Pushing a tag like v1.2.3 publishes a GitHub release with etesync.zip (used by HACS).
+# Tags with a suffix (v1.2.3-beta.1) become pre-releases.
+# An existing tag can be (re-)released with "Run workflow".
 on:
-  release:
-    types: [published]
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to release, e.g. v0.1.0
+        required: true
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+
 jobs:
   release:
-    name: Attach integration zip
+    name: Publish release
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
-      - name: Set manifest version from tag
-        env:
-          TAG: ${{ github.event.release.tag_name }}
+        with:
+          ref: refs/tags/${{ env.TAG }}
+
+      - name: Check tag
         run: |
-          version="${TAG#v}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::Tag $TAG is not of the form v1.2.3 or v1.2.3-beta.1"
+            exit 1
+          fi
+
+      - name: Build etesync.zip
+        run: |
           manifest=custom_components/etesync/manifest.json
-          jq --arg version "$version" '.version = $version' "$manifest" > manifest.tmp
+          jq --arg version "${TAG#v}" '.version = $version' "$manifest" > manifest.tmp
           mv manifest.tmp "$manifest"
-          cat "$manifest"
-      - name: Build zip
+          (cd custom_components/etesync && zip -r "$GITHUB_WORKSPACE/etesync.zip" . -x '*__pycache__*')
+          unzip -l etesync.zip
+
+      - name: Release notes from CHANGELOG.md
         run: |
-          cd custom_components/etesync
-          zip -r "$GITHUB_WORKSPACE/etesync.zip" . -x '*__pycache__*'
-      - name: Upload to release
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name }}
-        run: gh release upload "$TAG" etesync.zip --clobber
+          awk -v header="## [${TAG#v}]" '
+            index($0, header) == 1 { found = 1; next }
+            found && /^## \[/ { exit }
+            found && /^\[[^]]*\]: / { next }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ] || ! grep -q '[^[:space:]]' notes.md; then
+            echo "::warning::No CHANGELOG.md section for ${TAG#v}, using generated notes"
+            : > notes.md
+          fi
+          cat notes.md
+
+      - name: Publish
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release upload "$TAG" etesync.zip --clobber --repo "$GITHUB_REPOSITORY"
+            exit 0
+          fi
+          args=(--repo "$GITHUB_REPOSITORY" --title "$TAG" --verify-tag)
+          if [ -s notes.md ]; then args+=(--notes-file notes.md); else args+=(--generate-notes); fi
+          if [[ "$TAG" == *-* ]]; then args+=(--prerelease); fi
+          gh release create "$TAG" etesync.zip "${args[@]}"

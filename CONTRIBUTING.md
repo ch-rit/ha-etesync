@@ -44,5 +44,7 @@ Link or copy `custom_components/etesync` into the `custom_components` directory 
 
 ## Releases
 
-1. Update `CHANGELOG.md`.
-2. Publish a GitHub release with a tag like `v0.2.0`. The release workflow writes the version into `manifest.json` and attaches `etesync.zip`, which HACS installs.
+1. Move the `[Unreleased]` entries in `CHANGELOG.md` to a new `## [0.2.0] - YYYY-MM-DD` section and commit.
+2. Tag and push: `git tag -a v0.2.0 -m v0.2.0 && git push origin v0.2.0`.
+
+The release workflow then writes the version into `manifest.json`, builds `etesync.zip` (which HACS installs) and publishes a GitHub release, using the changelog section as release notes. Tags with a suffix such as `v0.2.0-beta.1` become pre-releases. To release an existing tag again, run the **Release** workflow manually and enter the tag.
