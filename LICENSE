@@ -19,10 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-The files in custom_components/etesync/etebase/ are a Python port of parts of
-etebase-rs (https://github.com/etesync/etebase-rs), © 2020 Etebase Authors.
-They are licensed under LGPL-2.1-only (see LICENSES/LGPL-2.1-only.txt), and the
-upstream BSD-3-Clause notice is kept in LICENSES/BSD-3-Clause-etebase-rs.txt.

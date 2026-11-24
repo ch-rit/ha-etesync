@@ -1,6 +1,7 @@
 {
   "domain": "etesync",
   "name": "EteSync",
+  "categories": ["productivity_information.calendars_todos"],
   "codeowners": ["@ch-rit"],
   "config_flow": true,
   "dependencies": [],
