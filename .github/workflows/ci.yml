@@ -62,11 +62,6 @@ jobs:
         run: |
           uv venv
           uv pip install -r requirements_test.txt etebase==0.32.0
-      - name: Cache Etebase server
-        uses: actions/cache@v6
-        with:
-          path: .etebase-test-server
-          key: etebase-server-${{ hashFiles('scripts/run_test_server.sh') }}
       - name: Start Etebase server
         run: |
           ./scripts/run_test_server.sh > server.log 2>&1 &

@@ -21,13 +21,18 @@ DATA="$WORK/data"
 if [ ! -d "$SRC/.git" ]; then
   git clone --quiet "$SERVER_REPO" "$SRC"
 fi
-git -C "$SRC" checkout --quiet "$SERVER_REF"
-
-if [ ! -x "$VENV/bin/python" ]; then
-  # The server's requirements are pinned for Python 3.12.
-  uv venv --quiet --python 3.12 "$VENV"
-  VIRTUAL_ENV="$VENV" uv pip install --quiet -r "$SRC/requirements.txt"
+if ! git -C "$SRC" checkout --quiet "$SERVER_REF" 2>/dev/null; then
+  git -C "$SRC" fetch --quiet origin
+  git -C "$SRC" checkout --quiet "$SERVER_REF"
 fi
+
+# Recreate the venv if its interpreter is gone (e.g. a uv-managed Python that
+# was removed or never restored on this machine). The server's requirements are
+# pinned for Python 3.12.
+if ! "$VENV/bin/python" -c "" 2>/dev/null; then
+  uv venv --quiet --clear --python 3.12 "$VENV"
+fi
+VIRTUAL_ENV="$VENV" uv pip install --quiet -r "$SRC/requirements.txt"
 
 mkdir -p "$CONF" "$DATA/media" "$DATA/static"
 cat > "$CONF/etebase_server_settings.py" <<EOF
