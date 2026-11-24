@@ -1,0 +1,61 @@
+name: Bug report
+description: Something does not work as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please never paste passwords, task content you want to keep private, or the `session` value from your configuration.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Integration version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.11.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: installation
+    attributes:
+      label: Installation type
+      options:
+        - Home Assistant OS
+        - Home Assistant Container
+        - Home Assistant Supervised
+        - Home Assistant Core
+    validations:
+      required: true
+  - type: dropdown
+    id: server
+    attributes:
+      label: EteSync server
+      options:
+        - Hosted EteSync (api.etebase.com)
+        - Self-hosted Etebase server
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Debug logs
+      description: |
+        Enable debug logging on the integration page (⋮ → Enable debug logging), reproduce the problem, then disable it again and paste the relevant part here.
+      render: text
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Download diagnostics from the integration page (⋮ → Download diagnostics) and attach or paste them. They contain no credentials or task content.

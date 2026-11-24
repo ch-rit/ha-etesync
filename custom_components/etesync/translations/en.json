@@ -1,0 +1,69 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect an EteSync account",
+        "description": "Every task list of the account becomes a to-do list. Add the integration again to connect more accounts.",
+        "data": {
+          "url": "Server URL",
+          "username": "Username",
+          "password": "Password"
+        },
+        "data_description": {
+          "url": "Keep the default for the hosted EteSync service. For a self-hosted Etebase server, enter its base URL (without /api/v1/).",
+          "username": "Your EteSync username.",
+          "password": "Your EteSync password. It is only used to log in and is not stored."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate EteSync",
+        "description": "The session of {username} on {url} is no longer valid. Enter the password to log in again.",
+        "data": {
+          "password": "Password"
+        },
+        "data_description": {
+          "password": "Your EteSync password."
+        }
+      }
+    },
+    "error": {
+      "account_not_initialized": "This account has never been used. Log in once with an official EteSync app to set it up.",
+      "cannot_connect": "Failed to connect to the server.",
+      "invalid_auth": "Invalid username or password.",
+      "invalid_url": "Enter a valid http(s) URL.",
+      "not_etebase_server": "No Etebase server was found at this URL.",
+      "unknown": "Unexpected error, check the logs."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "reauth_successful": "Re-authentication was successful.",
+      "wrong_account": "The credentials belong to a different account."
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "The EteSync session expired and could not be renewed. Re-authenticate the account."
+    },
+    "conflict": {
+      "message": "The task was changed by another device. Try again."
+    },
+    "invalid_session": {
+      "message": "The stored EteSync session could not be read. Re-authenticate the account."
+    },
+    "item_not_found": {
+      "message": "Task {uid} does not exist (anymore)."
+    },
+    "list_not_found": {
+      "message": "The task list does not exist (anymore)."
+    },
+    "read_only": {
+      "message": "The task list {list} is shared read-only with this account."
+    },
+    "update_failed": {
+      "message": "Error syncing with EteSync: {error}"
+    },
+    "write_failed": {
+      "message": "Error saving to EteSync: {error}"
+    }
+  }
+}

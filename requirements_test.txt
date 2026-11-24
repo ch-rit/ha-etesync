@@ -1,0 +1,7 @@
+# Pins Home Assistant 2026.10.4 and its test tooling.
+pytest-homeassistant-custom-component==0.13.375
+# Integration requirements (manifest.json); icalendar matches the Home Assistant core pin.
+icalendar==6.3.1
+msgpack==1.2.4
+PyNaCl==1.6.2
+ruff==0.17.6

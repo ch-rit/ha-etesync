@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Attach integration zip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set manifest version from tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version="${TAG#v}"
+          manifest=custom_components/etesync/manifest.json
+          jq --arg version "$version" '.version = $version' "$manifest" > manifest.tmp
+          mv manifest.tmp "$manifest"
+          cat "$manifest"
+      - name: Build zip
+        run: |
+          cd custom_components/etesync
+          zip -r "$GITHUB_WORKSPACE/etesync.zip" . -x '*__pycache__*'
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name }}
+        run: gh release upload "$TAG" etesync.zip --clobber

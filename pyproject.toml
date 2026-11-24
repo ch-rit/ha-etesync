@@ -1,0 +1,56 @@
+[project]
+name = "ha-etesync"
+version = "0.1.0"
+description = "EteSync task lists for Home Assistant"
+readme = "README.md"
+requires-python = ">=3.14"
+license = "MIT AND LGPL-2.1-only"
+license-files = ["LICENSE", "LICENSES/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+  "live_server: talks to a real Etebase server (set ETEBASE_TEST_SERVER)",
+]
+filterwarnings = ["ignore::DeprecationWarning:pytest_asyncio.*"]
+
+[tool.coverage.run]
+source = ["custom_components.etesync"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = ["if TYPE_CHECKING:"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+  "A", "ASYNC", "B", "BLE", "C4", "D", "E", "F", "FLY", "G", "I", "INP", "LOG",
+  "N", "PERF", "PGH", "PIE", "PL", "PT", "PTH", "RET", "RSE", "RUF", "S", "SIM",
+  "SLF", "T20", "TID", "TRY", "UP", "W",
+]
+ignore = [
+  "D202",    # blank line after docstring
+  "D203",    # incompatible with D211
+  "D213",    # incompatible with D212
+  "PLR0911", # too many return statements
+  "PLR0912", # too many branches
+  "PLR0913", # too many arguments
+  "PLR2004", # magic values
+  "TRY003",  # long exception messages
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D", "E501", "S101", "S105", "SLF001", "PLR0915", "INP001"]
+"scripts/**" = ["T20", "INP001"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+known-first-party = ["custom_components.etesync", "homeassistant"]
+combine-as-imports = true

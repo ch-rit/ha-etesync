@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue
+    url: https://github.com/ch-rit/ha-etesync/security/advisories/new
+    about: Please report security issues privately.
+  - name: Home Assistant community forum
+    url: https://community.home-assistant.io/
+    about: General questions about Home Assistant.

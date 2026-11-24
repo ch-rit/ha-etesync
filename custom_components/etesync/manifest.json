@@ -1,0 +1,14 @@
+{
+  "domain": "etesync",
+  "name": "EteSync",
+  "codeowners": ["@ch-rit"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/ch-rit/ha-etesync",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/ch-rit/ha-etesync/issues",
+  "loggers": ["custom_components.etesync"],
+  "requirements": ["icalendar>=6.1.0", "msgpack>=1.0.0", "PyNaCl>=1.5.0"],
+  "version": "0.1.0"
+}
